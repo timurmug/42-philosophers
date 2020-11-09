@@ -6,7 +6,7 @@
 #    By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/07 09:44:44 by qtamaril          #+#    #+#              #
-#    Updated: 2020/11/07 10:49:10 by qtamaril         ###   ########.fr        #
+#    Updated: 2020/11/09 15:58:51 by qtamaril         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,11 +16,10 @@ INCLUDES = includes/philo_one.h
 FLAGS = -Wall -Wextra -Werror -pthread
 FLAGS_LIB = -Iincludes
 
-SRCS =	srcs/main.c \
-				utils/ft_putendl_fd.c \
-				utils/ft_putstr_fd.c \
-				utils/ft_putnbr_fd.c \
-				utils/ft_putchar_fd.c
+SRCS =	srcs/ft_check_num.c \
+		srcs/ft_putall.c \
+		srcs/main.c \
+		srcs/utils.c
 
 OBJS = $(SRCS:%.c=%.o)
 
@@ -31,7 +30,6 @@ all: $(NAME)
 $(NAME): $(INCLUDE) $(OBJS)
 	clang $(FLAGS) $(OBJS) -o $(NAME)
 	@echo "----------------------"
-	./$(NAME)
 
 norme:
 	@make fclean

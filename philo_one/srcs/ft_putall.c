@@ -1,16 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_putall.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/07 10:42:46 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/07 10:43:08 by qtamaril         ###   ########.fr       */
+/*   Created: 2020/11/09 15:16:57 by qtamaril          #+#    #+#             */
+/*   Updated: 2020/11/09 15:18:12 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
+
+void			ft_putchar_fd(char c, int fd)
+{
+	if (fd < 0)
+		return ;
+	write(fd, &c, sizeof(char));
+}
+
+void			ft_putstr_fd(char *s, int fd)
+{
+	int i;
+
+	if (!s || fd < 0)
+		return ;
+	i = 0;
+	while (s[i])
+		ft_putchar_fd(s[i++], fd);
+}
+
+void			ft_putendl_fd(char *s, int fd)
+{
+	if (!s || fd < 0)
+		return ;
+	ft_putstr_fd(s, fd);
+	ft_putchar_fd('\n', fd);
+}
 
 static void		ft_putnbr_recursion(long int nb, int fd)
 {

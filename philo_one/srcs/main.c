@@ -6,41 +6,46 @@
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 09:51:12 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/07 11:37:52 by qtamaril         ###   ########.fr       */
+/*   Updated: 2020/11/09 15:55:38 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-#include <stdint.h>
-#define BIG 1000000000UL
-uint32_t counter = 0;
-pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
-
-void *count_to_big(void *arg)
+void	*philo(void *arg)
 {
-	uint32_t i = 0;
 	(void)arg;
-	while (i++ < BIG)
-	{
-		// thread will wait here until it can get the lock
-		pthread_mutex_lock(&lock);
-		counter++;
-		// other thread releases lock here
-		pthread_mutex_unlock(&lock);
-	}
+	pthread_mutex_lock(&g_mutex);
+	ft_putendl_fd("here", 1);
+	pthread_mutex_unlock(&g_mutex);
 	return (NULL);
 }
 
-int	main(void)
+void	threads(void)
 {
-	pthread_t newthread;
+	pthread_t	tid[g_options.num_of_philo];
+	int			i;
 
-	pthread_create(&newthread, NULL, count_to_big, NULL);
-	count_to_big(NULL);
-	pthread_join(newthread, NULL);
+	i = 0;
+	while (i < g_options.num_of_philo)
+	{
+		pthread_create(&tid[i], NULL, philo, NULL);
+		i++;
+	}
+	i = 0;
+	while (i < g_options.num_of_philo)
+	{
+		pthread_join(tid[i], NULL);
+		i++;
+	}
+}
 
-	ft_putnbr_fd(counter, STDOUT_FILENO);
-	ft_putendl_fd("", STDOUT_FILENO);
+int		main(int ac, char **av)
+{
+	if (!check_options(ac, av))
+		return (1);
+	pthread_mutex_init(&g_mutex, NULL);
+	threads();
+	pthread_mutex_destroy(&g_mutex);
 	return (0);
 }
