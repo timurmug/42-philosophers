@@ -6,7 +6,7 @@
 #    By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/07 09:44:44 by qtamaril          #+#    #+#              #
-#    Updated: 2020/11/09 15:58:51 by qtamaril         ###   ########.fr        #
+#    Updated: 2020/11/10 15:28:36 by qtamaril         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,9 @@ FLAGS_LIB = -Iincludes
 
 SRCS =	srcs/ft_check_num.c \
 		srcs/ft_putall.c \
+		srcs/init.c \
 		srcs/main.c \
+		srcs/philo_eats.c \
 		srcs/utils.c
 
 OBJS = $(SRCS:%.c=%.o)
