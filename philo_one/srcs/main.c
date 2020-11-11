@@ -6,31 +6,58 @@
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 09:51:12 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/10 15:54:07 by qtamaril         ###   ########.fr       */
+/*   Updated: 2020/11/11 17:29:34 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
+// иногда при смерти философа программа не завершается!
+
+void	*check_time(void *arg)
+{
+	t_philo		*philo;
+
+	philo = (t_philo *)arg;
+	while (1)
+	{
+		// pthread_mutex_lock(&philo->philo_mutex);
+		if (get_millisecs() - philo->meal_time > g_options.time_to_die)
+			break ;
+		// pthread_mutex_unlock(&philo->philo_mutex);
+		usleep(10);
+	}
+	if (!g_options.stop && philo->limit_count_eat)
+	{
+		print_change((philo->id) + 1, " died\n", 2);
+		g_options.stop = 1;
+	}
+	return (NULL);
+}
+
+# include <stdio.h>
 void	*philo_life(void *arg)
 {
-	t_philo	philo;
+	t_philo		*philo;
+	pthread_t	tid;
 
-	philo = *(t_philo *)arg;
-	while (philo.limit_count_eat--)
+	pthread_create(&tid, NULL, check_time, arg);
+	philo = (t_philo *)arg;
+	while (philo->limit_count_eat)
 	{
-		if (!philo_eats(&philo))
+		if (g_options.stop)
 			break ;
-		if (!check_time_from_meal(philo))
+		philo_eats(philo);
+		if (g_options.stop)
 			break ;
-		print_change(philo.meal_time, philo.id + 1, "is sleeping");
+		print_change(philo->id + 1, " is sleeping\n", 1);
 		ft_sleep(g_options.time_to_sleep);
-		if (!check_time_from_meal(philo))
+		if (g_options.stop)
 			break ;
-		print_change(philo.meal_time, philo.id + 1, "is thinking");
-		if (!check_time_from_meal(philo))
-			break ;
+		print_change(philo->id + 1, " is thinking\n", 1);
+		philo->limit_count_eat--;
 	}
+	// pthread_join(tid, NULL);
 	return (NULL);
 }
 
@@ -69,6 +96,6 @@ int		main(int ac, char **av)
 	if (!check_options(ac, av))
 		return (1);
 	start();
-	pthread_mutex_destroy(&g_options.mutex);
+	pthread_mutex_destroy(&g_options.write_mutex);
 	return (0);
 }

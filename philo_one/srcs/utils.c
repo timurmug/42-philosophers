@@ -6,26 +6,37 @@
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/09 15:55:26 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/10 16:09:42 by qtamaril         ###   ########.fr       */
+/*   Updated: 2020/11/11 12:58:37 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-void		print_change(long int timestamp_in_ms, int id, char *mes)
+void		print_change(int id, char *mes, int needed_lock)
 {
-	pthread_mutex_lock(&g_options.mutex);
-	ft_putnbr_fd(timestamp_in_ms, STDOUT_FILENO);
-	ft_putchar_fd(' ', STDOUT_FILENO);
-	ft_putnbr_fd(id, STDOUT_FILENO);
-	ft_putchar_fd(' ', STDOUT_FILENO);
-	ft_putendl_fd(mes, STDOUT_FILENO);
-	pthread_mutex_unlock(&g_options.mutex);
+	char		*time_str;
+	char		*id_str;
+	char		*strjoin;
+
+	if (g_options.stop)
+		return ;
+	pthread_mutex_lock(&g_options.write_mutex);
+	time_str = ft_itoa(get_millisecs() - g_options.start_time);
+	strjoin = ft_strdup(time_str);
+	free(time_str);
+	id_str = ft_itoa(id);
+	strjoin = ft_strjoin_new(strjoin, " ");
+	strjoin = ft_strjoin_new(strjoin, id_str);
+	free(id_str);
+	strjoin = ft_strjoin_new(strjoin, mes);
+	ft_putstr_fd(strjoin, STDOUT_FILENO);
+	free(strjoin);
+	(needed_lock != 2) ? pthread_mutex_unlock(&g_options.write_mutex) : 1 - 1;
 }
 
 int			print_error(char *str)
 {
-	ft_putendl_fd(str, STDERR_FILENO);
+	ft_putstr_fd(str, STDERR_FILENO);
 	return (0);
 }
 
@@ -35,15 +46,15 @@ int			check_options(int ac, char **av)
 
 	i = 1;
 	if (ac != 5 && ac != 6)
-		return (print_error("Incorrect number of params"));
+		return (print_error("Incorrect number of params\n"));
 	while (av[i])
 	{
 		if (!ft_str_is_num(av[i]) || ft_atoi(av[i]) <= 0)
-			return (print_error("Incorrect param format"));
+			return (print_error("Incorrect param format\n"));
 		if (i == 1 && ft_atoi(av[i]) > 200)
-			return (print_error("Number of philos shouldn't be more than 200"));
+			return (print_error("Number of philos shouldn't be more than 200\n"));
 		if (i >= 2 && i <= 4 && ft_atoi(av[i]) < 60)
-			return (print_error("Time shouldn't be less than 60"));
+			return (print_error("Time shouldn't be less than 60\n"));
 		i++;
 	}
 	init_options(ac, av);

@@ -6,7 +6,7 @@
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/10 10:35:17 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/10 15:05:02 by qtamaril         ###   ########.fr       */
+/*   Updated: 2020/11/11 14:36:36 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ void	init_options(int ac, char **av)
 	g_options.time_to_sleep = ft_atoi(av[4]);
 	g_options.limit_count_eat = (ac == 6) ? ft_atoi(av[5]) : -1;
 	g_options.start_time = get_millisecs();
-	pthread_mutex_init(&g_options.mutex, NULL);
+	g_options.stop = 0;
+	pthread_mutex_init(&g_options.write_mutex, NULL);
 }
 
 void	init_forks_mutexes(pthread_mutex_t *forks_mutexes)
@@ -38,4 +39,5 @@ void	init_philo(t_philo *philo, int id)
 	philo->id = id;
 	philo->meal_time = get_millisecs();
 	philo->limit_count_eat = g_options.limit_count_eat;
+	pthread_mutex_init(&philo->philo_mutex, NULL);
 }

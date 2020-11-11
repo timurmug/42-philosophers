@@ -6,7 +6,7 @@
 #    By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/07 09:44:44 by qtamaril          #+#    #+#              #
-#    Updated: 2020/11/10 15:28:36 by qtamaril         ###   ########.fr        #
+#    Updated: 2020/11/11 12:56:20 by qtamaril         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,9 @@ INCLUDES = includes/philo_one.h
 FLAGS = -Wall -Wextra -Werror -pthread
 FLAGS_LIB = -Iincludes
 
-SRCS =	srcs/ft_check_num.c \
-		srcs/ft_putall.c \
+SRCS =	srcs/ft_num.c \
+		srcs/ft_str.c \
+		srcs/ft_put.c \
 		srcs/init.c \
 		srcs/main.c \
 		srcs/philo_eats.c \
@@ -31,10 +32,11 @@ all: $(NAME)
 
 $(NAME): $(INCLUDE) $(OBJS)
 	clang $(FLAGS) $(OBJS) -o $(NAME)
-	@echo "----------------------"
 
 norme:
 	@make fclean
+	@echo
+	norminette ./includes
 	@echo
 	norminette ./srcs
 
