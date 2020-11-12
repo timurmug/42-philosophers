@@ -6,7 +6,7 @@
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/10 15:27:48 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/11 16:52:59 by qtamaril         ###   ########.fr       */
+/*   Updated: 2020/11/12 11:14:31 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,9 @@ void	philo_eats(t_philo *philo)
 		philo_takes_forks(philo, philo->id, right);
 	else
 		philo_takes_forks(philo, right, philo->id);
-
-	// pthread_mutex_lock(&philo->philo_mutex);
-	// pthread_mutex_unlock(&philo->philo_mutex);
-
 	print_change(philo->id + 1, " is eating\n", 1);
 	philo->meal_time = get_millisecs();
 	ft_sleep(g_options.time_to_eat);
-
 	if (philo->id % 2)
 		philo_breaks_forks(right, philo->id);
 	else

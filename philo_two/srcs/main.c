@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/07 09:51:12 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/12 11:15:14 by qtamaril         ###   ########.fr       */
+/*   Created: 2020/11/12 11:24:24 by qtamaril          #+#    #+#             */
+/*   Updated: 2020/11/12 11:38:29 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 void	*check_time(void *arg)
 {
@@ -63,7 +63,7 @@ void	all_threads_create_join(pthread_t *tids)
 	i = 0;
 	while (i < g_options.num_of_philo)
 	{
-		init_philo(&philo[i], i);
+		// init_philo(&philo[i], i);
 		pthread_create(&tids[i], NULL, philo_life, &philo[i]);
 		i++;
 	}
@@ -78,7 +78,7 @@ void	start(void)
 	pthread_mutex_t	forks_mutexes[g_options.num_of_philo];
 	int				i;
 
-	init_forks_mutexes(forks_mutexes);
+	// init_forks_mutexes(forks_mutexes);
 	all_threads_create_join(tids);
 	i = 0;
 	while (i < g_options.num_of_philo)

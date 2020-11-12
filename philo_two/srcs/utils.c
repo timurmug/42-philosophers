@@ -6,11 +6,11 @@
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/09 15:55:26 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/12 11:16:49 by qtamaril         ###   ########.fr       */
+/*   Updated: 2020/11/12 11:25:42 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 void		print_change(int id, char *mes, int needed_lock)
 {
