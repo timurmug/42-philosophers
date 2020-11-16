@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   init_and_eats.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/10 10:35:17 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/12 11:37:24 by qtamaril         ###   ########.fr       */
+/*   Updated: 2020/11/13 11:32:22 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,35 @@ void	init_options(int ac, char **av)
 	g_options.limit_count_eat = (ac == 6) ? ft_atoi(av[5]) : -1;
 	g_options.start_time = get_millisecs();
 	g_options.stop = 0;
-	// pthread_mutex_init(&g_options.write_mutex, NULL);
+	g_options.sem_forks = sem_open("sem_forks", O_CREAT, NULL, g_options.num_of_philo);
+	g_options.sem_write = sem_open("sem_write", O_CREAT, NULL, 1);
+	g_options.sem_steward = sem_open("sem_steward", O_CREAT, NULL, 1);
 }
 
-// void	init_forks_mutexes(pthread_mutex_t *forks_mutexes)
-// {
-// 	int i;
-//
-// 	i = 0;
-// 	while (i < g_options.num_of_philo)
-// 		// pthread_mutex_init(&forks_mutexes[i++], NULL);
-// 	g_options.forks_mutexes = forks_mutexes;
-// }
-//
-// void	init_philo(t_philo *philo, int id)
-// {
-// 	philo->id = id;
-// 	philo->meal_time = get_millisecs();
-// 	philo->limit_count_eat = g_options.limit_count_eat;
-// 	// pthread_mutex_init(&philo->philo_mutex, NULL);
-// }
+void	init_philo(t_philo *philo, int id)
+{
+	philo->id = id;
+	philo->meal_time = get_millisecs();
+	philo->limit_count_eat = g_options.limit_count_eat;
+	// g_options.sem_steward = sem_open("sem_steward", O_CREAT, NULL, 1);
+}
+
+void	philo_eats(t_philo *philo)
+{
+	sem_wait(g_options.sem_steward);
+
+	sem_wait(g_options.sem_forks);
+	print_change(philo->id + 1, " has taken a fork\n", 1);
+	sem_wait(g_options.sem_forks);
+	print_change(philo->id + 1, " has taken a fork\n", 1);
+
+	sem_post(g_options.sem_steward);
+
+
+	print_change(philo->id + 1, " is eating\n", 1);
+	philo->meal_time = get_millisecs();
+	ft_sleep(g_options.time_to_eat);
+
+	sem_post(g_options.sem_forks);
+	sem_post(g_options.sem_forks);
+}

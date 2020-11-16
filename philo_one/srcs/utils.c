@@ -6,21 +6,24 @@
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/09 15:55:26 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/12 11:16:49 by qtamaril         ###   ########.fr       */
+/*   Updated: 2020/11/16 15:16:53 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-void		print_change(int id, char *mes, int needed_lock)
+void		print_change(int id, char *mes)
 {
 	char		*time_str;
 	char		*id_str;
 	char		*strjoin;
 
+	pthread_mutex_lock(&g_options.mutex_write);
 	if (g_options.stop)
+	{
+		pthread_mutex_unlock(&g_options.mutex_write);
 		return ;
-	pthread_mutex_lock(&g_options.write_mutex);
+	}
 	time_str = ft_itoa(get_millisecs() - g_options.start_time);
 	strjoin = ft_strdup(time_str);
 	free(time_str);
@@ -31,7 +34,7 @@ void		print_change(int id, char *mes, int needed_lock)
 	strjoin = ft_strjoin_new(strjoin, mes);
 	ft_putstr_fd(strjoin, STDOUT_FILENO);
 	free(strjoin);
-	(needed_lock != 2) ? pthread_mutex_unlock(&g_options.write_mutex) : 1 - 1;
+	pthread_mutex_unlock(&g_options.mutex_write);
 }
 
 int			print_error(char *str)

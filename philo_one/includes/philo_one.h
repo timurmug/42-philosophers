@@ -6,7 +6,7 @@
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 09:54:39 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/11 16:25:11 by qtamaril         ###   ########.fr       */
+/*   Updated: 2020/11/16 15:15:29 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ typedef struct		s_options
 	int				time_to_sleep;
 	int				limit_count_eat;
 	long int		start_time;
-	pthread_mutex_t	write_mutex;
-	pthread_mutex_t	*forks_mutexes;
+	pthread_mutex_t	*mutexes_forks;
+	pthread_mutex_t	mutex_write;
+	pthread_mutex_t	mutex_die;
+	pthread_mutex_t	mutex_time;
 	int				stop;
 }					t_options;
 
@@ -36,7 +38,6 @@ typedef struct		s_philo
 	int				id;
 	long int		meal_time;
 	int				limit_count_eat;
-	pthread_mutex_t	philo_mutex;
 }					t_philo;
 
 /*
@@ -69,13 +70,7 @@ char				*ft_strjoin_new(char *s1, char *s2);
 
 void				init_options(int ac, char **av);
 void				init_forks_mutexes(pthread_mutex_t *forks_mutexes);
-void				init_philo(t_philo *philo, int id);
 
-/*
-** main.c
-*/
-
-void				*check_time(void *arg);
 /*
 ** philo_eats.c
 */
@@ -86,7 +81,7 @@ void				philo_eats(t_philo *philo);
 ** utils.c
 */
 
-void				print_change(int id, char *mes, int needed_lock);
+void				print_change(int id, char *mes);
 int					print_error(char *str);
 int					check_options(int ac, char **av);
 long int			get_millisecs(void);

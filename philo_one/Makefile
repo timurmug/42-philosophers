@@ -6,7 +6,7 @@
 #    By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/07 09:44:44 by qtamaril          #+#    #+#              #
-#    Updated: 2020/11/11 12:56:20 by qtamaril         ###   ########.fr        #
+#    Updated: 2020/11/13 09:55:06 by qtamaril         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ OBJS = $(SRCS:%.c=%.o)
 
 all: $(NAME)
 
-$(NAME): $(INCLUDE) $(OBJS)
+$(NAME): $(INCLUDES) $(OBJS)
 	clang $(FLAGS) $(OBJS) -o $(NAME)
 
 norme:
@@ -40,7 +40,7 @@ norme:
 	@echo
 	norminette ./srcs
 
-%.o: %.c $(INCLUDES)
+%.o: %.c
 	@clang $(FLAGS) $(FLAGS_LIB) -c $< -o $@
 
 clean:

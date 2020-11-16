@@ -6,7 +6,7 @@
 #    By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/07 09:44:44 by qtamaril          #+#    #+#              #
-#    Updated: 2020/11/12 11:23:25 by qtamaril         ###   ########.fr        #
+#    Updated: 2020/11/13 09:54:41 by qtamaril         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,9 +19,8 @@ FLAGS_LIB = -Iincludes
 SRCS =	srcs/ft_num.c \
 		srcs/ft_str.c \
 		srcs/ft_put.c \
-		srcs/init.c \
+		srcs/init_and_eats.c \
 		srcs/main.c \
-		srcs/philo_eats.c \
 		srcs/utils.c
 
 OBJS = $(SRCS:%.c=%.o)
@@ -30,7 +29,7 @@ OBJS = $(SRCS:%.c=%.o)
 
 all: $(NAME)
 
-$(NAME): $(INCLUDE) $(OBJS)
+$(NAME): $(INCLUDES) $(OBJS)
 	clang $(FLAGS) $(OBJS) -o $(NAME)
 
 norme:
@@ -40,7 +39,7 @@ norme:
 	@echo
 	norminette ./srcs
 
-%.o: %.c $(INCLUDES)
+%.o: %.c
 	@clang $(FLAGS) $(FLAGS_LIB) -c $< -o $@
 
 clean:

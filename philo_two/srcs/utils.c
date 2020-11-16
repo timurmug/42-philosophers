@@ -6,7 +6,7 @@
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/09 15:55:26 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/12 11:25:42 by qtamaril         ###   ########.fr       */
+/*   Updated: 2020/11/13 10:59:04 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ void		print_change(int id, char *mes, int needed_lock)
 
 	if (g_options.stop)
 		return ;
-	pthread_mutex_lock(&g_options.write_mutex);
+
+	sem_wait(g_options.sem_write);
+
 	time_str = ft_itoa(get_millisecs() - g_options.start_time);
 	strjoin = ft_strdup(time_str);
 	free(time_str);
@@ -31,7 +33,13 @@ void		print_change(int id, char *mes, int needed_lock)
 	strjoin = ft_strjoin_new(strjoin, mes);
 	ft_putstr_fd(strjoin, STDOUT_FILENO);
 	free(strjoin);
-	(needed_lock != 2) ? pthread_mutex_unlock(&g_options.write_mutex) : 1 - 1;
+
+	if (needed_lock != 2)
+		sem_post(g_options.sem_write);
+	// else
+	// 	exit(1);
+	// (void)needed_lock;
+	// sem_post(g_options.sem_write);
 }
 
 int			print_error(char *str)

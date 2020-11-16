@@ -6,7 +6,7 @@
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/10 10:35:17 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/11 14:36:36 by qtamaril         ###   ########.fr       */
+/*   Updated: 2020/11/16 14:51:53 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ void	init_options(int ac, char **av)
 	g_options.limit_count_eat = (ac == 6) ? ft_atoi(av[5]) : -1;
 	g_options.start_time = get_millisecs();
 	g_options.stop = 0;
-	pthread_mutex_init(&g_options.write_mutex, NULL);
+	pthread_mutex_init(&g_options.mutex_write, NULL);
+	pthread_mutex_init(&g_options.mutex_die, NULL);
+	pthread_mutex_init(&g_options.mutex_time, NULL);
 }
 
 void	init_forks_mutexes(pthread_mutex_t *forks_mutexes)
@@ -31,13 +33,5 @@ void	init_forks_mutexes(pthread_mutex_t *forks_mutexes)
 	i = 0;
 	while (i < g_options.num_of_philo)
 		pthread_mutex_init(&forks_mutexes[i++], NULL);
-	g_options.forks_mutexes = forks_mutexes;
-}
-
-void	init_philo(t_philo *philo, int id)
-{
-	philo->id = id;
-	philo->meal_time = get_millisecs();
-	philo->limit_count_eat = g_options.limit_count_eat;
-	pthread_mutex_init(&philo->philo_mutex, NULL);
+	g_options.mutexes_forks = forks_mutexes;
 }
