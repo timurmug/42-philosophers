@@ -6,23 +6,24 @@
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/09 15:55:26 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/13 10:59:04 by qtamaril         ###   ########.fr       */
+/*   Updated: 2020/11/17 10:47:55 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_two.h"
 
-void		print_change(int id, char *mes, int needed_lock)
+void		print_change(int id, char *mes)
 {
 	char		*time_str;
 	char		*id_str;
 	char		*strjoin;
 
-	if (g_options.stop)
-		return ;
-
 	sem_wait(g_options.sem_write);
-
+	if (g_options.stop)
+	{
+		sem_post(g_options.sem_write);
+		return ;
+	}
 	time_str = ft_itoa(get_millisecs() - g_options.start_time);
 	strjoin = ft_strdup(time_str);
 	free(time_str);
@@ -33,13 +34,7 @@ void		print_change(int id, char *mes, int needed_lock)
 	strjoin = ft_strjoin_new(strjoin, mes);
 	ft_putstr_fd(strjoin, STDOUT_FILENO);
 	free(strjoin);
-
-	if (needed_lock != 2)
-		sem_post(g_options.sem_write);
-	// else
-	// 	exit(1);
-	// (void)needed_lock;
-	// sem_post(g_options.sem_write);
+	sem_post(g_options.sem_write);
 }
 
 int			print_error(char *str)
@@ -66,7 +61,8 @@ int			check_options(int ac, char **av)
 			return (print_error("Time shouldn't be less than 60\n"));
 		i++;
 	}
-	init_options(ac, av);
+	if (!init_options(ac, av))
+		return (0);
 	return (1);
 }
 

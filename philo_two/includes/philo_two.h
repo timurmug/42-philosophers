@@ -6,7 +6,7 @@
 /*   By: qtamaril <qtamaril@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 09:54:39 by qtamaril          #+#    #+#             */
-/*   Updated: 2020/11/13 11:34:23 by qtamaril         ###   ########.fr       */
+/*   Updated: 2020/11/17 10:46:12 by qtamaril         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ typedef struct		s_options
 	sem_t			*sem_forks;
 	sem_t			*sem_write;
 	sem_t			*sem_steward;
+	sem_t			*sem_time;
+	sem_t			*sem_die;
 	int				stop;
 }					t_options;
 
@@ -38,7 +40,6 @@ typedef struct		s_philo
 	int				id;
 	long int		meal_time;
 	int				limit_count_eat;
-	// sem_t			*sem_die_eat;
 }					t_philo;
 
 /*
@@ -48,7 +49,6 @@ typedef struct		s_philo
 int					ft_atoi(const char *str);
 int					ft_str_is_num(char *str);
 char				*ft_itoa(long int n);
-
 
 /*
 ** ft_put.c
@@ -70,16 +70,14 @@ char				*ft_strjoin_new(char *s1, char *s2);
 ** init_and_eats.c
 */
 
-void				init_options(int ac, char **av);
-void				init_philo(t_philo *philo, int id);
+int					init_options(int ac, char **av);
 void				philo_eats(t_philo *philo);
 
 /*
 ** utils.c
 */
 
-void				print_change(int id, char *mes, int needed_lock);
-// void				print_change(int id, char *mes, sem_t *sem_write, int needed_lock);
+void				print_change(int id, char *mes);
 int					print_error(char *str);
 int					check_options(int ac, char **av);
 long int			get_millisecs(void);
