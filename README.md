@@ -1,131 +1,55 @@
+# Philosophers
+#### 42 project about basics of threading a process and how to work on the same memory space
 
-## how to create thread, work with in/out values
-		void* say_hello(void *arg)
-		{
-			int	i;
-			int	*count;
-			int	*ret;
+</br>
 
-			i = 5;
-			count = (int *)arg;
-			while (i--)
-			{
-				sleep(2);
-				ft_putendl_fd("hello", STDOUT_FILENO);
-				(*count)++;
-			}
-			ret = (int *)malloc(sizeof(int));
-			ret = 10;
-			return (ret);
-		}
+* **First task**: philosopher with threads and mutex
+	* One fork between each philosopher, therefore there will be a fork at the right and at the left of each philosopher.
+	* Should protect the forks state with a mutex for each of them.
+	* Each philosopher should be a thread.
+* **Second task**: philosopher with threads and semaphore
+	* All the forks are in the middle of the table.
+	* They have no states in memory but the number of available forks is represented by a semaphore.
+	* Each philosopher should be a thread.
+* **Third task**: philosopher with processes and semaphore
+	* All the forks are in the middle of the table.
+	* They have no states in memory but the number of available forks is represented by a semaphore.
+	* Each philosopher should be a process and the main process should not be a philosopher.
 
-		void	say_bye(void)
-		{
-			int	i;
+</br>
 
-			i = 3;
-			while (i--)
-			{
-				sleep(1);
-				ft_putendl_fd("bye", STDOUT_FILENO);
-			}
-		}
+##  Each program should have the same options: 
+* **number_of_philosophers**: is the number of philosophers and also the number of forks
+* **time_to_die**: is in milliseconds, if a philosopher doesn’t start eating ’time_to_die’ milliseconds after starting his last meal or the beginning of the simulation, it dies
+* **time_to_eat**: is in milliseconds and is the time it takes for a philosopher to eat. During that time he will need to keep the two forks.
+* **time_to_sleep**: is in milliseconds and is the time the philosopher will spend sleeping.
+* **number_of_times_each_philosopher_must_eat**: argument is optional, if all philosophers eat at least ’number_of_times_each_philosopher_must_eat’ the simulation will stop. If not specified, the simulation will stop only at the death of a philosopher.
 
-		int	main(void)
-		{
-			pthread_t newthread;
-			int				count;
-			int				*ret;
+</br>
 
-			count = 0;
-			pthread_create(&newthread, NULL, say_hello, &count);
-			say_bye();
-			pthread_join(newthread, (void *)&ret);
+## Threads
+| Function | Description |
+| --- | --- |
+| pthread_create(&thread_var, NULL, func_name, &arg_to_func_in_void) | create new thread |
+| pthread_join(thread_var, NULL) | main thread is waiting thread |
 
-			ft_putstr_fd("count: ", STDOUT_FILENO);
-			ft_putnbr_fd(count, STDOUT_FILENO);
-			ft_putendl_fd("", STDOUT_FILENO);
+</br>
 
-			ft_putstr_fd("ret: ", STDOUT_FILENO);
-			ft_putnbr_fd(*ret, STDOUT_FILENO);
-			ft_putendl_fd("", STDOUT_FILENO);
-			free(ret);
-			return (0);
-		}
+## Mutexes
+| Function | Description |
+| --- | --- |
+| pthread_mutex_init(&mutex_var, NULL) | init mutex |
+| pthread_mutex_lock(&mutex_var) | increment mutex by 1 |
+| pthread_mutex_unlock(&mutex_var) | decrement mutex by 1 |
+| pthread_mutex_destroy(&mutex_var) | free resources allocated for mutex |
 
-## Creating multiple threads
+</br>
 
-		struct sum_struct
-		{
-			long long limit;
-			long long answer;
-		};
-
-		void* sum(void *arg)
-		{
-			struct sum_struct *args_struct = (struct sum_struct *)arg;
-
-			long long sum = 0;
-			for (long long i = 0; i <= args_struct->limit; i++)
-				sum += i;
-			args_struct->answer = sum;
-			return (NULL);
-		}
-
-		int main(int ac, char **av)
-		{
-			int					num_ac = ac - 1;
-			struct sum_struct	args[num_ac];
-			pthread_t			tid[num_ac];
-
-			for (int i = 0; i < num_ac; i++)
-			{
-				args[i].limit = atoll(av[i + 1]);
-				pthread_create(&tid[i], NULL, sum, &args[i]);
-			}
-			for (int i = 0; i < num_ac; i++)
-			{
-				pthread_join(tid[i], NULL);
-				printf("For tid %d sum is %lld\n", (int)tid[i], args[i].answer);
-			}
-			return (0);
-		}
-
-## how to use mutex
-		#include <stdio.h>
-		#define NUM_LOOPS 20000000
-		long long sum = 0;
-		pthread_mutex_t mutex;
-
-		void* counting_thread(void *arg)
-		{
-			int offset = *(int *)arg;
-			for (int i = 0; i < NUM_LOOPS; i++)
-			{
-				pthread_mutex_lock(&mutex);
-				sum += offset;
-				pthread_mutex_unlock(&mutex);
-			}
-			return (NULL);
-		}
-
-		int main(void)
-		{
-			pthread_mutex_init(&mutex, NULL);
-
-			pthread_t tid1;
-			int offset1 = 1;
-			pthread_create(&tid1, NULL, counting_thread, &offset1);
-
-			pthread_t tid2;
-			int offset2 = -1;
-			pthread_create(&tid2, NULL, counting_thread, &offset2);
-
-			pthread_join(tid1, NULL);
-			pthread_join(tid2, NULL);
-
-			pthread_mutex_destroy(&mutex);
-
-			printf("sum = %lld\n", sum);
-			return (0);
-		}
+## Semaphores
+| Function | Description |
+| --- | --- |
+| sem_unlink("file_name") | unlink old semaphore |
+| sem_var = sem_open("file_name", O_CREAT, NULL, 7) | open semaphore "file_name", assign value to 7 and save in sem_var |
+| sem_post(sem_var) | increment semaphore by 1 |
+| sem_wait(sem_var) | decrement semaphore by 1 |
+| sem_close(sem_var) | close semaphore |
